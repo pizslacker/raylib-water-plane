@@ -10,6 +10,16 @@
 #define GRID_SIZE 60
 #define GRID_SPACING 0.5f
 
+// Convert Amiga-style 0-255 colors into Raylib Colors
+Color LerpColor(Color c1, Color c2, float amount) {
+    return (Color){
+        (unsigned char)(c1.r + (c2.r - c1.r) * amount),
+        (unsigned char)(c1.g + (c2.g - c1.g) * amount),
+        (unsigned char)(c1.b + (c2.b - c1.b) * amount),
+        255
+    };
+}
+
 int main(int argc, char **argv) {
     int screenWidth = 1280;
     int screenHeight = 1024;
@@ -87,6 +97,14 @@ int main(int argc, char **argv) {
 
         BeginDrawing();
             ClearBackground((Color){ 15, 15, 15, 255 }); 
+
+            // Background: Simulated Amiga "Copper" raster gradient
+            for (int y = 0; y < screenHeight; y++) {
+                float norm = (float)y / screenHeight;
+                Color topCol = (Color){ 5, 5, 20, 255 };
+                Color botCol = (Color){ 20, 45, 90, 255 };
+                DrawLine(0, y, screenWidth, y, LerpColor(topCol, botCol, norm));
+            }
 
             BeginMode3D(camera);
                 
